@@ -1,0 +1,22 @@
+name: Deploy application
+ 
+on:
+  push:
+    branches: [ master ]
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Frontend_Alivecore app
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ubuntu
+          key: ${{ secrets.PEM_SECRET }}
+          port: 22
+          script: |
+            sudo systemctl restart nginx
+            cd project_nodejs
+            git pull origin master
+            npm run build
